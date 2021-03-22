@@ -1,0 +1,35 @@
+.user-profile img{
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+.draggings{
+  height: 100vh;
+  background:#e8f3f5;
+  margin-top: 25px;
+  border-bottom: 10px;
+}
+.draggable{
+  padding: 4px 5px 4px 7px;
+  min-height: 70px;
+  border-radius: 6px;
+}
+.draggings-user{
+  font-size: 12px;
+  margin-bottom: -10px;
+}
+.icon-bug{
+  color: red;
+  font-size: 1.2em;
+}
+.icon-plus{
+  color: rgb(17, 141, 212);
+  font-size: 1.5rem;
+
+}
+.icon-plus:hover{
+  cursor: pointer;
+}
+.login-link:hover{
+  cursor: pointer;
+}
