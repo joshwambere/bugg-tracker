@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import bodyParser from 'body-parser';
 import http from 'http'
-import CourseRoute from './routes/course';
-import StudentRoute from './routes/Student';
+import UsersRoute from './routes/users';
+import BugsRoute from './routes/bugs';
 import cors from 'cors'
 
 
@@ -28,8 +28,8 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome campus' });
 });
 
-app.use('/courses', CourseRoute);
-app.use('/students', StudentRoute);
+app.use('/users', UsersRoute);
+app.use('/bugs', BugsRoute);
 export { app };
 
 export default server;
