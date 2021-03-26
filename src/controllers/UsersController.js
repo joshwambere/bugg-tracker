@@ -11,7 +11,7 @@ const loginUser = async (req, res) => {
     .then((user)=>{
       if (!user) {
         return res.status(401).json({
-          message: res.__('User not found.'),
+          message: 'User not found.',
         });
       }
       user.comparePassword(req.body.password, (err, isMatch) => {
