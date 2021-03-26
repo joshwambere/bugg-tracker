@@ -27,7 +27,7 @@
 
 .draggable{
   padding: 4px 5px 4px 7px;
-  min-height: 70px;
+  min-height: 95px;
   border-radius: 6px;
   cursor: move;
 }
