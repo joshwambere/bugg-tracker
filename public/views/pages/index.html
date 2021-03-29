@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <title>Bugg Trucker</title>
+</head>
+<body>
+  <section class="site">
+    <div class="nav-bar">
+      <nav class="navbar navbar-light bg-light justify-content-between">
+        <div>
+          <img src="../../images/logo.png" alt="logo" width="30">
+        <a class="navbar-brand text-secondary" href="#" > aBugs</a>
+        </div>
+        <div class="profile d-flex">
+          
+          <div id=user-prof class="user-profile">
+            <img src="../../images/user.png" alt="user">
+          </div>
+
+          <p id="login-btn">
+
+            <a data-toggle="modal" data-target="#loginModal"  class="nav-link login-link ">Login</a>
+          </p>
+          <script>
+            const user=document.getElementById('user-prof');
+            const loginUser=document.getElementById('login-btn');
+            if(localStorage.getItem('token')==null){
+              user.style.display='none'
+            }else{
+              loginUser.style.display='none'
+            }
+          </script>
+        </div>
+      </nav>
+    </div>
+      <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form method="post" id="loginForm">
+              <div class="modal-body">
+                <label for="name">Email</label>
+                <input class="form-control" type="email" id="email">
+                <label for="pwd" class="mt-2">Password</label>
+                <input class="form-control" type="password" name="pwd" id="password">
+               
+              </div>
+              <div class="modal-footer">
+                <button type="submit" onclick="login()"  class="btn btn-sm btn-success">Login</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    <div class="control-area">
+      <div class="bg-light mx-2 mt-3">
+        <div class=" p-2 d-flex justify-content-between">
+          <div class="d-flex">
+            <p>12</p> <i class="fa fa-bug icon-bug" aria-hidden="true"></i>
+          </div>
+          <div>
+            
+            <i data-toggle="modal" data-target="#exampleModal" class="fa fa-plus-circle icon-plus" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bug-modal">
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Report a Bug</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form method="post" id="myForm" >
+              <div class="errors mr-2 ml-2" id="errors">
+
+              </div>
+              <div class="modal-body">
+                <label for="name">Title</label>
+                <input class="form-control" type="text" id="title">
+                <label for="description">Descrption</label>
+                <textarea class="form-control" name="descrption" id="desc" cols="30" rows="6"></textarea>
+                <label for="select">Priority</label>
+                <select name="select" id="priority" class="form-control">
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" onclick="addBug()" class="btn btn-sm btn-primary" >Report</button>
+              </div>
+            </div>
+            </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bug-area">
+      <div class="container">
+        <div class="row">
+          <div class="draggings-holder col-md-3">
+            <div class=" draggings p-3 m-2 mx-auto" id="bug">
+              <div class="draggings-title">
+                <h6><b>Bug</b></h6>
+              </div>
+          
+            </div>
+          </div>
+          <div class="draggings-holder col-md-3">
+            <div class=" draggings p-3 m-2 mx-auto" id="fixing">
+              <div class="draggings-title">
+                <h6><b>fixing</b></h6>
+              </div>
+              
+
+                
+            
+            </div>
+          </div>
+
+          <div class="draggings-holder col-md-3">
+            <div class=" draggings p-3 m-2 mx-auto" id="testing">
+              <div class="draggings-title">
+                <h6><b>Testing</b></h6>
+              </div>
+              
+  
+              
+            </div>
+          </div>
+          
+
+          <div class="draggings-holder col-md-3">
+            <div class=" draggings p-3 m-2 mx-auto" id="fixed">
+              <div class="draggings-title">
+                <h6><b>fixed</b></h6>
+              </div>
+             
+  
+              
+              
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="../../js/bootstrap.min.js"></script>
+  <script src="../../js/script.js"></script>
+</body>
+</html>
