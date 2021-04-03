@@ -65,8 +65,16 @@ const deleteBug=async(req,res)=>{
   }
 }
 
+const getSingleBug=async(req,res)=>{
+  try {
+    const bugs = await model.bugs.findOne({where:{id:req.params.id}});
+    return res.status(200).json({ success: true, bugs });
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
 
 
 
 
-module.exports = {addBug, UpdateBugs,getBugs,deleteBug};
+module.exports = {addBug, UpdateBugs,getBugs,deleteBug,getSingleBug};
