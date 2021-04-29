@@ -38,7 +38,7 @@ const getBugs=async()=>{
             switch(item.bug_status) {
               case 'bug':
                 const bugCont=document.querySelector('#bug')
-                bugCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true">
+                bugCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true" name="dragg">
                   <div class="draggable-info ">
                     <p class="bugTitle">${item.bug_title}</p>
                     <i class="float-right draggings-user">Johnson</i>

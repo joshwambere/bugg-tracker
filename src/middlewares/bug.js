@@ -18,4 +18,4 @@ const _validateBug=(req, res,next)=>{
 }
 
 
-module.exports = { _validateBug};
+module.exports = {_validateBug};

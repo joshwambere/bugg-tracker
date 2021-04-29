@@ -32,10 +32,10 @@ Object.keys(db).forEach((modelName) => {
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log('Connected successfully.');
   })
   .catch((err) => {
-    console.error('Unable to connect to the database:', err);
+    console.error('connection failed:', err);
   });
 
 db.sequelize = sequelize;

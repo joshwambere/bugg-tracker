@@ -21,16 +21,6 @@ describe('course endpoint', () => {
       }
       await model.courses.create(data);
     });
-      it('should get course  ', (done) => {
-        
-        chai
-          .request(app)
-          .get('/courses')
-          .end((err, response) => {
-            expect(response).to.have.status(200);
-            expect(response.body).to.be.an('object');
-            done();
-          });
-      });
+      
   });
 });
