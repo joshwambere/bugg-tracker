@@ -16,6 +16,23 @@ const getSingleBug=async(boxId)=>{
     return data;
     
 }
+async function getUser(id){
+  let data=  await fetch(`http://127.0.0.1:3000/users/${id}`, {
+    method: 'get',
+    headers: {
+      'content-type':'application/json',
+      "Authorization": localStorage.getItem('token')
+    }}
+  ).then(async (response)=> {
+     if (response.status == 200){
+       const  bugData= await response.json();
+        return bugData;
+      }
+        
+    });
+
+    return data;
+}
 
 
 const getBugs=async()=>{
@@ -26,6 +43,9 @@ const getBugs=async()=>{
       }}
     )
     .then(async (response)=> {
+      const buxNumber=document.querySelector('#bugs');
+      const res=await response.json()
+      buxNumber.innerHTML=res.bugs.length;
         if (response.status !== 200) {
           const msg=await response.json()
           const error=document.querySelector('.errors')
@@ -33,15 +53,21 @@ const getBugs=async()=>{
           Bug not added ${msg.message}
         </div>`
         }else{
-          res=await response.json();
+          
+
           res.bugs.forEach(item=>{
+            const user=getUser(item.added_by)
+            console.log(user);
             switch(item.bug_status) {
               case 'bug':
                 const bugCont=document.querySelector('#bug')
                 bugCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true" name="dragg">
                   <div class="draggable-info ">
                     <p class="bugTitle">${item.bug_title}</p>
-                    <i class="float-right draggings-user">Johnson</i>
+                    <div class="del-section">
+                      <i class="float-right draggings-user">${item.user.names}</i>
+                      <i class="fa fa-trash-o delete" aria-hidden="true" onclick="deleteBug(${item.id})"  data-id="${item.id}"></i>
+                    </div>
                     
                   </div>
                   <input value="${item.id}" class="bug_id" hidden="true"></input>
@@ -52,7 +78,10 @@ const getBugs=async()=>{
                 fixCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true">
                   <div class="draggable-info ">
                     <p class="bugTitle">${item.bug_title}</p>
-                    <i class="float-right draggings-user">Johnson</i>
+                    <div class="del-section">
+                      <i class="float-right draggings-user">${item.user.names}</i>
+                      <i class="fa fa-trash-o delete" aria-hidden="true" onclick="deleteBug(${item.id})"  data-id="${item.id}"></i>
+                    </div>
                   </div>
                   <input value="${item.id}" class="bug_id" hidden="true"></input>
                 </div>`
@@ -62,8 +91,10 @@ const getBugs=async()=>{
                 testCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true">
                   <div class="draggable-info ">
                     <p class="bugTitle">${item.bug_title}</p>
-                    <i class="float-right draggings-user">Johnson</i>
-                    
+                    <div class="del-section">
+                      <i class="float-right draggings-user">${item.user.names}</i>
+                      <i class="fa fa-trash-o delete" aria-hidden="true" onclick="deleteBug(${item.id})"  data-id="${item.id}"></i>
+                    </div>
                   </div>
                   <input value="${item.id}" class="bug_id" hidden="true"></input>
                 </div>`
@@ -73,7 +104,10 @@ const getBugs=async()=>{
                 doneCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true">
                 <div class="draggable-info ">
                   <p class="bugTitle">${item.bug_title}</p>
-                  <i class="float-right draggings-user">Johnson</i>
+                  <div class="del-section">
+                      <i class="float-right draggings-user">${item.user.names}</i>
+                      <i class="fa fa-trash-o delete" aria-hidden="true" onclick="deleteBug(${item.id})"  data-id="${item.id}"></i>
+                    </div>
                   
                 </div>
                 <input value="${item.id}" class="bug_id" hidden="true"></input>
@@ -84,8 +118,10 @@ const getBugs=async()=>{
                 defCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true">
                   <div class="draggable-info ">
                     <p class="bugTitle">${item.bug_title}</p>
-                    <i class="float-right draggings-user">Johnson</i>
-                    
+                    <div class="del-section">
+                      <i class="float-right draggings-user">${item.user.names}</i>
+                      <i class="fa fa-trash-o delete" aria-hidden="true" onclick="deleteBug(${item.id})"  data-id="${item.id}"></i>
+                    </div>
                   </div>
                   <input value="${item.id}" class="bug_id" hidden="true"></input>
                 </div>`
@@ -103,6 +139,30 @@ const getBugs=async()=>{
   
 }
 getBugs()
+
+
+//delete bug
+
+const deleteBug=(boxId)=>{
+      fetch(`http://127.0.0.1:3000/bugs/delete/${boxId}`, {
+          method: 'delete',
+          headers: {
+            'content-type':'application/json',
+            "Authorization": localStorage.getItem('token')
+          }
+        }).then(async (response)=> {
+            if (response.status !== 200) {
+              const msg=await response.json()
+              document.querySelector('.alert-warning').classList.add('show')
+              setTimeout(function() {
+                document.querySelector('.alert-warning').classList.add('hide');
+                document.querySelector('.alert-warning').classList.remove('show');
+            }, 4000);
+            }else{
+              location.reload();
+            }
+        });
+}
 
 
 
@@ -278,12 +338,16 @@ function addBug(){
     const bug_title=document.querySelector('#title').value
     const bug_desc=document.querySelector('#desc').value
     const bug_priority=document.querySelector('#priority').value
+    const user=localStorage.getItem("user");
+    const added_by=JSON.parse(user).id
+
     const bug_status="new"
     let data={
       bug_title,
       bug_desc,
       bug_priority,
-      bug_status
+      bug_status,
+      added_by
     }
 
     fetch('http://127.0.0.1:3000/bugs/add', {

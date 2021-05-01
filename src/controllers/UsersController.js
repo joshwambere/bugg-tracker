@@ -10,7 +10,7 @@ const loginUser = async (req, res) => {
     model.users.findOne({where:{email: req.body.email}})
     .then((user)=>{
       if (!user) {
-        return res.status(401).json({
+        return res.status(404).json({
           message: 'User not found.',
         });
       }
@@ -19,7 +19,7 @@ const loginUser = async (req, res) => {
           const token = jwt.sign(JSON.parse(JSON.stringify(user)), process.env.JWT_KEY, { expiresIn: '24h' });
           jwt.verify(token, process.env.JWT_KEY, () => { });
           user.password = undefined;
-          res.json({ success: true, user,token: token });
+          res.status(200).json({ success: true, user,token: token });
         } else {
           res.status(401).json({ success: false, message: res.status(403).send({message:'email or password is incorect.'}) });
         }
@@ -46,6 +46,19 @@ const signupUser=(req,res)=>{
     });
 };
 
-module.exports = {loginUser, signupUser};
+const getSingleUser=async(req,res)=>{
+  try {
+    const user=await model.users.findOne({where:{id:req.params.id}})
+    if(user){
+      res.status(200).json({user});
+    }else{
+      res.status(404).json({message:'user not found'});
+    }
+  } catch (error) {
+    res.status(500).json({error});
+  }
+};
+
+module.exports = {loginUser, signupUser,getSingleUser};
 
 

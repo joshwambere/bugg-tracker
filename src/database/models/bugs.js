@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      bugs.belongsTo(models.users, {
+        foreignKey: 'added_by',
+        onDelete: 'CASCADE'
+      });
     }
   };
   bugs.init({
@@ -18,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     bug_desc: DataTypes.STRING,
     bug_priority: DataTypes.STRING,
     bug_status: DataTypes.STRING,
-    added_by: DataTypes.STRING
+    added_by: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'bugs',

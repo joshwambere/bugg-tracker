@@ -8,7 +8,8 @@ const _schema = Joi.object().keys({
   bug_title: Joi.string().required().max(70),
   bug_desc: Joi.string().max(670),
   bug_priority: Joi.string().required().max(30),
-  bug_status: Joi.string()
+  bug_status: Joi.string(),
+  added_by: Joi.number()
 });
 
 const _validateBug=(req, res,next)=>{

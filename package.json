@@ -64,6 +64,7 @@
     "store": "^2.0.12"
   },
   "devDependencies": {
+    "artillery": "^1.7.2",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "concurrently": "^6.0.0",

@@ -3,6 +3,7 @@ import chai from 'chai';
 import http from 'chai-http';
 import { beforeEach } from 'mocha';
 import app from '../app';
+import db from '../database/models';
 
 
 process.env.NODE_ENV = 'test';
@@ -168,6 +169,23 @@ describe('bug endpoint', () => {
               done();
             });
         });
+
+        it('should not update bug info ', (done) => {
+          const data = {
+            bug_desc:'when i delete value in db',
+            bug_status:'new' 
+          };
+          chai
+            .request(app)
+            .put(`/bugs/update/1`)
+            .set('authorization', token)
+            .send(data)
+            .end((err, response) => {
+              expect(response).to.have.status(400);
+              expect(response.body).to.be.an('object');
+              done();
+            });
+        });
       })
 
       describe('delete bug info', () => {
@@ -311,33 +329,61 @@ describe('bug endpoint', () => {
                 });
             });
 
-            describe('get single bug', () => {
-              before((done)=>{
-                const data = {
-                  bug_title:'foreign key constraint',
-                  bug_desc:'when i delete value in db',
-                  bug_priority:'high',
-                  bug_status:'new' 
-                };
-                chai
-                  .request(app)
-                  .post('/bugs/add')
-                  .set('authorization', token)
-                  .send(data)
-                  .then((res) => {
-                    info = res.body;
-                    done();
-                  })
-                  .catch((err) => {
-                    done(err);
-                  });
-              });
-              
+            it('should  not delete bug  ', (done) => {
+              chai
+                .request(app)
+                .delete(`/bugs/delete/xyz`)
+                .set('authorization', token2)
+                .end((err, response) => {
+                  expect(response).to.have.status(500);
+                  expect(response.body).to.be.an('object');
+                  done();
+                });
+            });
 
+            describe('get single bug', () => {
+              beforeEach((done)=>{
+                db.bugs.destroy({truncate:true});
+                done();
+              })
+              describe('get single bug' ,() => {
+                before((done)=>{
+                  const data = {
+                    bug_title:'foreign key constraint',
+                    bug_desc:'when i delete value in db',
+                    bug_priority:'high',
+                    bug_status:'new' 
+                  };
+                  chai
+                    .request(app)
+                    .get('/bugs/add')
+                    .set('authorization', token)
+                    .send(data)
+                    .then((res) => {
+                      info = res.body;
+                      done();
+                    })
+                    .catch((err) => {
+                      done(err);
+                    });
+                });
+
+                it('should  not delete bug  ', (done) => {
+                  chai
+                    .request(app)
+                    .get(`/bugs/4`)
+                    .set('authorization', token2)
+                    .end((err, response) => {
+                      expect(response).to.have.status(200);
+                      expect(response.body).to.be.an('object');
+                      done();
+                    });
+                })
+              })
+              
             });
 
           })
-
 
         });
       });

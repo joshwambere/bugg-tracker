@@ -12,7 +12,7 @@ module.exports = {
         bug_desc: 'redis server shutting down on start',
         bug_priority:"high",
         bug_status:"fixing",
-        added_by:"1",
+        added_by:1,
         createdAt: new Date(),
         updatedAt: new Date()
      }], {});

@@ -17,7 +17,10 @@ const addBug = async (req, res) => {
 
 const getBugs=async(req,res)=>{
   try {
-    const bugs = await model.bugs.findAll();
+    const bugs = await model.bugs.findAll({include: [
+       { model: model.users}
+    ]});
+    
     return res.status(200).json({ success: true, bugs });
   } catch (error) {
     return res.status(500).send(error.message);
@@ -54,14 +57,14 @@ const deleteBug=async(req,res)=>{
         await model.bugs.destroy({ where: { id: req.params.id } });
         res.status(200).send({ success: true, message: 'bug deleted successfuly' });
       }else{
-        res.status(403).send({ success: true, message: 'You have to be the owner to delete card' });
+        res.status(403).send({ success: true, message: 'You have to be the owner or Adim to delete card' });
       }
       
     } else {
       res.status(404).send({ success: false, error: 'bug not found!' });
     }
   } catch (error) {
-    res.status(404).send({ success: false, error: 'bug not found!' });
+    res.status(500).send({ success: false, error });
   }
 }
 

@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      users.hasMany(models.bugs, {
+        foreignKey: 'added_by'
+      });
     }
   };
   users.prototype.comparePassword = function (passw, cb) {

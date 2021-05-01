@@ -37,12 +37,17 @@
 }
 .icon-bug{
   color: red;
-  font-size: 1.2em;
+  font-size: 1em;
+  margin-top: 3px;
+  margin-left: 2px;
 }
 .icon-plus{
   color: rgb(17, 141, 212);
   font-size: 1.5rem;
 
+}
+.bugTitle{
+  min-height: 48px;
 }
 .icon-plus:hover{
   cursor: pointer;
@@ -53,4 +58,39 @@
 
 .draggable.dragging{
   opacity: .7;
+}
+
+.fa-trash-o{
+  color: #da1b60;
+}
+.fa-trash-o:hover{
+  cursor: pointer;
+}
+
+.draggable-info {
+  display: flex;
+  flex-direction: column;
+  min-height: 89px;
+}
+.del-section{
+  width: 98%;
+  align-self: flex-end;
+  display: flex;
+  justify-content: space-between;
+}
+.bugs{
+  margin-top: -5px;
+}
+#testing .draggable {
+  border: 2px solid green;
+}
+
+#fixing .draggable {
+  border: 2px solid rgb(248, 226, 31);
+}
+#fixed .draggable {
+  border: 2px solid rgb(3, 94, 146);
+}
+#bug .draggable {
+  border: 2px solid rgb(247, 2, 2);
 }
