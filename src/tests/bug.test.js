@@ -67,7 +67,7 @@ describe('bug endpoint', () => {
             done();
           });
       });
-      it('should add bug info ', (done) => {
+      it('should not add bug info ', (done) => {
         const data = {
           bug_desc:'when i delete value in db',
           bug_priority:'high',

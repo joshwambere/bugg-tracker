@@ -17,7 +17,8 @@
     "start": "concurrently \"babel-node src/index.js\" \"cd public/views && npm run build && npm run serve \"",
     "build": "babel src --out-dir dist",
     "selenium": "cd src/selenium && node selenium.test.js",
-    "artillery":"artillery run --output report.json artilery.yml && artillery report --output report.html report.json"
+    "artillery":"artillery run --output report.json artilery.yml && artillery report --output report.html report.json",
+    "sel":"cd src/selenium && selenium-side-runner sel.side   "
   },
   "repository": {
     "type": "git",
