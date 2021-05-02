@@ -21,7 +21,7 @@ const loginUser = async (req, res) => {
           user.password = undefined;
           res.status(200).json({ success: true, user,token: token });
         } else {
-          res.status(401).json({ success: false, message: res.status(403).send({message:'email or password is incorect.'}) });
+          res.status(401).json({ success: false, message: 'email or password is incorect.' });
         }
       });
     });

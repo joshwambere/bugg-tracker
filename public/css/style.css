@@ -55,7 +55,9 @@
 .login-link:hover{
   cursor: pointer;
 }
-
+.draggable :hover{
+  cursor: pointer;
+}
 .draggable.dragging{
   opacity: .7;
 }

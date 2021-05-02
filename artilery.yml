@@ -5,14 +5,60 @@ config:
       arrivalRate: 5
       name: Warm up
     - duration: 120
-      arrivalRate: 5
+      arrivalRate: 10
       rampTo: 50
       name: Ramp up load
     - duration: 600
-      arrivalRate: 50
+      arrivalRate: 15
       name: Sustained load
 scenarios:
   - name: "Get bugs"
     flow:
       - get:
           url: "/bugs"
+  - name: "Get bugs"
+    flow:
+      - get:
+          url: "/bugs/36"
+  - name: "Add bugs"
+    flow:
+    - post:
+          url: "/users/login"
+          json:
+            email: "josh@gmail.com"
+            password: "okayfine"
+          headers:
+          Content-Type: "application/json"
+          capture:
+            json: "$.data.token"
+            as: "token"
+
+    - post:
+          url: "/bugs/add"
+          json:
+            bug_title: "redis server"
+            bug_status: "New"
+            bug_priority: "high"
+            added_by: 1
+  - name: "update bugs"
+    flow:
+      - post:
+          url: "/users/login"
+          json:
+            email: "josh@gmail.com"
+            password: "okayfine"
+          headers:
+          Content-Type: "application/json"
+          capture:
+            json: "$.data.token"
+            as: "token"
+      - put:
+          url: "/bugs/update/15"
+          headers:
+            Authorization: 'Bearer {{ token }}'
+          json:
+            bug_title: "redis server"
+            bug_status: "New"
+            bug_priority: "high"
+            added_by: "1"
+ 

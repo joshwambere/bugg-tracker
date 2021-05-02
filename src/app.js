@@ -7,6 +7,7 @@ import http from 'http'
 import UsersRoute from './routes/users';
 import BugsRoute from './routes/bugs';
 import cors from 'cors'
+const fs = require('fs')
 
 
 dotenv.config();
@@ -21,11 +22,11 @@ app.use(bodyParser.text());
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(express.static(path.join(__dirname, '../public')));
 app.set('view engine', 'pug');
-
-
+app.use(express.static('../public'))
+app.use('/views/pages', express.static('public'))
 // routes
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome campus' });
+  res.sendFile('/home/johnson/andela/projects/Bugg tracker/public/views/pages/index.html');
 });
 
 app.use('/users', UsersRoute);

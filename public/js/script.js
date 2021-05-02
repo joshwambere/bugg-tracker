@@ -16,6 +16,12 @@ const getSingleBug=async(boxId)=>{
     return data;
     
 }
+
+const edit=()=>{
+  // document.querySelector('#updateModal').classList.add('show');
+  $('#updateModal').modal('toggle');
+}
+
 async function getUser(id){
   let data=  await fetch(`http://127.0.0.1:3000/users/${id}`, {
     method: 'get',
@@ -56,12 +62,10 @@ const getBugs=async()=>{
           
 
           res.bugs.forEach(item=>{
-            const user=getUser(item.added_by)
-            console.log(user);
             switch(item.bug_status) {
               case 'bug':
                 const bugCont=document.querySelector('#bug')
-                bugCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true" name="dragg">
+                bugCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true" name="dragg" ondblclick="edit()" data-target="#updateModal" name="draggs">
                   <div class="draggable-info ">
                     <p class="bugTitle">${item.bug_title}</p>
                     <div class="del-section">
@@ -75,12 +79,12 @@ const getBugs=async()=>{
                 break;
               case 'fixing':
                 const fixCont=document.querySelector('#fixing')
-                fixCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true">
+                fixCont.innerHTML+=`<div class="draggable bg-white mt-2" name="fixes" draggable="true" ondblclick="edit()" data-target="#updateModal">
                   <div class="draggable-info ">
                     <p class="bugTitle">${item.bug_title}</p>
                     <div class="del-section">
                       <i class="float-right draggings-user">${item.user.names}</i>
-                      <i class="fa fa-trash-o delete" aria-hidden="true" onclick="deleteBug(${item.id})"  data-id="${item.id}"></i>
+                      <i class="fa fa-trash-o delete" aria-hidden="true" onclick="deleteBug(${item.id})"  data-id="${item.id}" name="dele"></i>
                     </div>
                   </div>
                   <input value="${item.id}" class="bug_id" hidden="true"></input>
@@ -88,7 +92,7 @@ const getBugs=async()=>{
                 break;
               case 'testing':
                 const testCont=document.querySelector('#testing')
-                testCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true">
+                testCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true" ondblclick="edit()" data-target="#updateModal">
                   <div class="draggable-info ">
                     <p class="bugTitle">${item.bug_title}</p>
                     <div class="del-section">
@@ -101,7 +105,7 @@ const getBugs=async()=>{
                 break;
               case 'fixed':
                 const doneCont=document.querySelector('#fixed')
-                doneCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true">
+                doneCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true" ondblclick="edit()" data-target="#updateModal">
                 <div class="draggable-info ">
                   <p class="bugTitle">${item.bug_title}</p>
                   <div class="del-section">
@@ -115,7 +119,7 @@ const getBugs=async()=>{
                 break;
               default:
                 const defCont=document.querySelector('#bug')
-                defCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true">
+                defCont.innerHTML+=`<div class="draggable bg-white mt-2" draggable="true" ondblclick="edit()" data-target="#updateModal">
                   <div class="draggable-info ">
                     <p class="bugTitle">${item.bug_title}</p>
                     <div class="del-section">
@@ -128,8 +132,9 @@ const getBugs=async()=>{
             }
             
             draggs()
-          }) 
             
+          }) 
+          vieCard() 
         }
       }
     )
@@ -140,9 +145,74 @@ const getBugs=async()=>{
 }
 getBugs()
 
+const vieCard=async()=>{
+  const card=document.querySelectorAll('.draggable');
+  card.forEach(item=>{
+    item.addEventListener('click',e=>{
+      let id=item.querySelectorAll('.bug_id')[0].value;
+      const singleBugData=getSingleBug(id);
+      singleBugData.then(res=>{
+        let data=res.bugs;
+        let form=document.querySelector('#modalUpdate');
+        form.querySelector('#titles').value=data.bug_title;
+        form.querySelector('#descr').value=data.bug_desc
+        form.querySelector('#prio').value=data.bug_priority
+        const forms=document.getElementById("myUpdateForm")
+        forms.addEventListener('submit',(e)=>{
+          e.preventDefault()
+          const bug_title=document.querySelector('#titles').value
+          const bug_desc=document.querySelector('#descr').value
+          const bug_priority=document.querySelector('#prio').value
+          const user=localStorage.getItem("user");
+          const added_by=JSON.parse(user).id
+
+          const bug_status=data.bug_status;
+          let bug={
+            bug_title,
+            bug_desc,
+            bug_priority,
+            bug_status,
+            added_by
+          }
+
+          fetch(`http://127.0.0.1:3000/bugs/update/${id}`, {
+            method: 'put',
+            headers: {
+              'content-type':'application/json',
+              "Authorization": localStorage.getItem('token')
+            },
+            body: JSON.stringify(bug)}
+          )
+          .then(async (response)=> {
+              if (response.status !== 200) {
+                const msg=await response.json()
+                const error=document.querySelector('.errors')
+                error.innerHTML+=`<div class="alert alert-danger" role="alert">
+                Bug not update ${msg.message}
+              </div>`
+            
+              forms.reset()
+              }else{
+                forms.reset()
+                document.getElementById('updateModal').classList.remove('show')
+                location.reload();
+                const shadow=document.querySelector('.modal-backdrop')
+                shadow.classList.remove('show')
+                
+              }
+            }
+          )
+          .catch(function(err) {
+            console.log('Fetch Error :-S', err);
+          });
+        })
+      })
+    })
+  })
+}
+
 
 //delete bug
-
 const deleteBug=(boxId)=>{
       fetch(`http://127.0.0.1:3000/bugs/delete/${boxId}`, {
           method: 'delete',
@@ -339,55 +409,62 @@ function addBug(){
     const bug_desc=document.querySelector('#desc').value
     const bug_priority=document.querySelector('#priority').value
     const user=localStorage.getItem("user");
-    const added_by=JSON.parse(user).id
-
-    const bug_status="new"
-    let data={
-      bug_title,
-      bug_desc,
-      bug_priority,
-      bug_status,
-      added_by
-    }
-
-    fetch('http://127.0.0.1:3000/bugs/add', {
-      method: 'post',
-      headers: {
-        'content-type':'application/json',
-        "Authorization": localStorage.getItem('token')
-      },
-      body: JSON.stringify(data)}
-    )
-    .then(async (response)=> {
-        if (response.status !== 201) {
-          const msg=await response.json()
-          const error=document.querySelector('.errors')
+    if(user==null){
+      const error=document.querySelector('.errors')
            error.innerHTML+=`<div class="alert alert-danger" role="alert">
-          Bug not added ${msg.message}
+          Login first 
         </div>`
-       
-        form.reset()
-        }else{
-          form.reset()
-          const modal=document.querySelector('#exampleModal')
-          modal.classList.remove('show')
-          getBugs()
-          location.reload();
-          const shadow=document.querySelector('.modal-backdrop')
-          shadow.classList.remove('show')
-          
-        }
+    }else{
+      const added_by=JSON.parse(user).id
+      const bug_status="new"
+      let data={
+        bug_title,
+        bug_desc,
+        bug_priority,
+        bug_status,
+        added_by
       }
-    )
-    .catch(function(err) {
-      console.log('Fetch Error :-S', err);
-    });
+
+      fetch('http://127.0.0.1:3000/bugs/add', {
+        method: 'post',
+        headers: {
+          'content-type':'application/json',
+          "Authorization": localStorage.getItem('token')
+        },
+        body: JSON.stringify(data)}
+      )
+      .then(async (response)=> {
+          if (response.status !== 201) {
+            const msg=await response.json()
+            const error=document.querySelector('.errors')
+            error.innerHTML+=`<div class="alert alert-danger" role="alert">
+            Bug not added ${msg.message}
+          </div>`
+        
+          form.reset()
+          }else{
+            form.reset()
+            const modal=document.querySelector('#exampleModal')
+            modal.classList.remove('show')
+            // getBugs()
+            location.reload();
+            const shadow=document.querySelector('.modal-backdrop')
+            shadow.classList.remove('show')
+            
+          }
+        }
+      )
+      .catch(function(err) {
+        console.log('Fetch Error :-S', err);
+      });
+    }
+    
   })
   
 }
 
 
-const login=()=>{
+const signin=()=>{
   const loginForm=document.querySelector('#loginForm')
   loginForm.addEventListener('submit', (e)=>{
     e.preventDefault()

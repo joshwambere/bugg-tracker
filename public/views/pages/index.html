@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../../images/logo.png">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../../css/bootstrap.min.css">
@@ -51,24 +52,23 @@
             <form method="post" id="loginForm">
               <div class="modal-body">
                 <label for="name">Email</label>
-                <input class="form-control" type="email" id="email">
+                <input class="form-control" type="email" id="email" name="emails">
                 <label for="pwd" class="mt-2">Password</label>
-                <input class="form-control" type="password" name="pwd" id="password">
+                <input class="form-control" type="password" name="pwds" id="password">
                
               </div>
               <div class="modal-footer">
-                <button type="submit" onclick="login()"  class="btn btn-sm btn-success">Login</button>
+                <button type="submit" onclick="signin()"  class="btn btn-sm btn-success" name="login">Login</button>
               </div>
             </form>
           </div>
         </div>
       </div>
-
     <div class="control-area">
       <div class="bg-light mx-2 mt-3">
         <div class=" p-2 d-flex justify-content-between">
           <div class="d-flex">
-            <p id="bugs"></p> <i class="fa fa-bug icon-bug" aria-hidden="true"></i>
+            <p id="bugs"></p> <i class="fa fa-bug icon-bug" aria-hidden="true" ></i>
           </div>
             <div class="alert alert-warning  fade hide" role="alert">
               <strong>Card not deleted</strong> You have to be Admin or the owner of the card.
@@ -76,7 +76,7 @@
             </div>
           <div>
             
-            <i data-toggle="modal" data-target="#exampleModal" class="fa fa-plus-circle icon-plus" aria-hidden="true"></i>
+            <i data-toggle="modal" data-target="#exampleModal" class="fa fa-plus-circle icon-plus" aria-hidden="true" id="add"></i>
           </div>
         </div>
       </div>
@@ -110,7 +110,43 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" onclick="addBug()" class="btn btn-sm btn-primary" >Report</button>
+                <button type="submit" onclick="addBug()" class="btn btn-sm btn-primary"  name="report">Report</button>
+              </div>
+            </div>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="bug-modal">
+      <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Bug</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form method="post" id="myUpdateForm" >
+              <div class="errors mr-2 ml-2" id="errors">
+
+              </div>
+              <div class="modal-body" id="modalUpdate">
+                <label for="name">Title</label>
+                <input class="form-control" type="text" id="titles">
+                <label for="description">Descrption</label>
+                <textarea class="form-control" name="descrption" id="descr" cols="30" rows="6"></textarea>
+                <label for="select">Priority</label>
+                <select name="select" id="prio" class="form-control">
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" onclick="vieCard()" class="btn btn-sm btn-primary" >Ok</button>
               </div>
             </div>
             </form>
